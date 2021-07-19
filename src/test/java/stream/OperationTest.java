@@ -1,6 +1,11 @@
 package stream;
 
+import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,4 +71,17 @@ class OperationTest {
         // then
         assertThat(actualResult).isEqualTo(expectedResult);
     }
+
+    @Test
+    void testToMap() {
+        Map<String, Operation> stringToEnum = Stream.of(Operation.values())
+                                                    .filter(o -> o.name().length() > 4)
+                                                    .collect(toMap(Object::toString, Function.identity()));
+        System.out.println(stringToEnum);
+
+        assertThat(stringToEnum).hasSize(3)
+                                .containsEntry(Operation.DIVIDE.name(), Operation.DIVIDE)
+                                .doesNotContainEntry(Operation.PLUS.name(), Operation.PLUS);
+    }
+
 }
